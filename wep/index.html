@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        onload=function(){
+            // let xhr=new XMLHttpRequest()
+            // xhr.open('get','http://127.0.0.1:5000/api/getheros')
+            // xhr.send(null)
+            // xhr.onreadystatechange=function(){
+            //     if(xhr.readyState==4&&xhr.status==200){
+            //         let data=JSON.parse(xhr.responseText)
+            //         console.log(data)
+            //     }
+            // }
+            const getJSON=function(url){
+                const promise=new Promise(function(reolve,reject){
+                    const xhr=new XMLHttpRequest()
+                    xhr.open('get',url)
+                    xhr.send(null)
+                    xhr.onreadystatechange=function(){
+                        if(xhr.readyState!==4){
+                            return
+                        }
+                        if(xhr.readyState==4&&xhr.status==200){
+                            reolve(this.response)
+                        }
+                        else {
+                            reject(this.statusText)
+                        }
+                    }
+                })
+                return promise;
+            }
+            getJSON('http://127.0.0.1:5000/api/getheros').then(function(resolve){
+                console.log('contents:'+resolve)
+            },function(error){
+                // console.error('出错了',error)
+                console.log(error)
+            })
+        }
+    </script>
+</body>
+</html>

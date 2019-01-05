@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../../node_modules/art-template/lib/template-web.js"></script>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="../../node_modules/axios/dist/axios.min.js"></script>
+    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/template" id="info">
+        <p><strong>Id：{{ id }}</strong></p>
+        <p><strong>姓名：{{ name }}</strong></p>
+        <p><strong>性别：{{ gender }}</strong></p>
+        <p><strong>创建时间：{{ ctime }}</strong></p>
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>王者荣耀<small>查看英雄</small></h1>
+        <hr>
+        <div class="info">
+            
+        </div>
+    </div>
+    <script>
+       $(function(){
+           const url=new URLSearchParams(location.search)
+           const id=url.get('id')
+           axios.get('http://127.0.0.1:5000/api/gethero?id='+id).then((result)=>{
+            console.log(result)
+            const {status,data,data:{err_code}}=result
+            if(status===200&& err_code===0){
+              const html= template('info',data.message[0])
+              $('.info').html(html)
+            }
+           })
+       })
+    </script>
+</body>
+</html>

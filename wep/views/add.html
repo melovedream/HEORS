@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../../node_modules/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>王者荣耀<small>添加新英雄</small></h1>
+        <hr>
+        <form id="form">
+            <div class="form-group">
+                <label>名称：</label>
+                <input type="text" name="name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>性别：</label>
+                <label>
+                    <input type="radio" name="gender" value="男" checked>
+                    男
+                </label>
+                <label>
+                    <input type="radio" name="gender" value="女">
+                    女
+                </label>
+            </div>
+            <input type="submit" value="添加新英雄" class="btn btn-primary">
+        </form>
+    </div>
+    <script>
+        //序列化表单数据   相当于jquery里面的serialize()方法 可以在axios写参数的地方以对象的方式书写参数data
+        axios.defaults.transformRequest = [function (data, headers) {
+            const arr = []
+            for (let key in data) {
+                arr.push(key + '=' + data[key])
+            }
+            return arr.join('&')
+        }]
+        $(function () {
+            $('#form').on('submit', function (e) {
+                e.preventDefault();
+                // axios.post('http://127.0.0.1:5000/api/addhero',$('#form').serialize()).then(
+                axios.post('http://127.0.0.1:5000/api/addhero', { name: 'zs', gender: '男' }).then(
+                    (result) => {
+                        console.log(result)
+                        const { status, data, data: { err_code, affectedRows } } = result
+                        if (status === 200 && err_code === 0 && affectedRows === 1) {
+                            location.href = '/'
+                        } else {
+                            alert('添加失败')
+                        }
+                    })
+            })
+        })
+    </script>
+</body>
+
+</html>

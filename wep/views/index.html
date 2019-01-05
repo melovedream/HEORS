@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="../../node_modules/art-template/lib/template-web.js"></script>
+    <script src="../../node_modules/axios/dist/axios.min.js"></script>
+    <script type="text/template" id="select">
+        {{each message  v }}
+        <tr>
+            <td>{{v.id}}</td>
+            <td>{{v.name}}</td>
+            <td>{{v.gender}}</td>
+            <td>{{v.ctime}}</td>
+            <td>
+                <a href="/info.html?id={{v.id}}" >查看</a>
+                <a href="/update.html?id={{v.id}}">编辑</a>
+                <a href='http://127.0.0.1:5000/api/delhero?id={{v.id}}' class='del'>删除</a>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+    <script>
+        $(function () {
+
+            // $.ajax({
+            //     url:'http://127.0.0.1:5000/api/getheros',
+            //     dataType:'json',
+            //     success:function(res){
+            //         let html=template('select',res)
+            //         $('tbody').html(html)
+            //     }
+            // })
+            function addindex() {
+                axios.get('http://127.0.0.1:5000/api/getheros').then((result) => {
+                    console.log(result)
+                    const { status, data, data: { err_code } } = result
+                    if (status === 200, err_code === 0) {
+                        const html = template('select', data)
+                        $('tbody').html(html)
+                    }
+                })
+            }
+            addindex()
+            $('tbody').on('click', '.del', function (e) {
+                e.preventDefault()
+                const href = e.target.href
+                if (window.confirm('你确定要删除这个英雄吗？')) {
+                    axios.get(href).then((result) => {
+                        console.log(result)
+                        const { status, data: { err_code } } = result
+                        if (status === 200 && err_code === 0) {
+                            addindex()
+                        }
+                    })
+
+                }
+            })
+
+        })
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>王者荣耀<small>王者归来</small></h1>
+        <hr>
+        <div class="">
+            <a href="./add.html" class="btn pull-right btn-success">点击添加</a>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>性别</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
